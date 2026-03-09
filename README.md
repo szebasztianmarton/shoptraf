@@ -1,56 +1,163 @@
-# Welcome to your Expo app 👋
+# ShopTraf - Price Monitoring App 📊
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Egy intelligens ár-monitorozó alkalmazás, amely segít követni a termékárak változásait és kapni az értesítéseket, ha az ár csökken. Az alkalmazás az Expo és React Native technológiákon alapul, teljes platform támogatással (iOS, Android és web).
 
-## Get started
+## 📋 Projekt Információ
 
-1. Install dependencies
+- **Név**: shoptraf
+- **Verzió**: 1.0.0
+- **Típus**: Price Monitoring Application
+- **Framework**: [Expo](https://expo.dev) 55+
+- **React verzió**: 19.2.0
+- **TypeScript**: Teljes támogatás
+
+## 🚀 Gyors Kezdés
+
+### Előfeltételek
+
+- Node.js 18+ verzió
+- npm vagy yarn
+
+### Telepítés
+
+1. **Függőségek telepítése**
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. **Alkalmazás indítása**
 
    ```bash
-   npx expo start
+   npm start
    ```
 
-In the output, you'll find options to open the app in a
+3. **Platformok közötti választás**
+   - iOS: `npm run ios`
+   - Android: `npm run android`
+   - Web: `npm run web`
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## ✨ Főbb Funkciók
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **Ár Monitorozás** - Kövesd nyomon a terméked árát valós időben
+- **Értesítések** - Kaptass értesítéseket, ha az ár csökken
+- **Árhistória** - Tekintsd meg az árak történetét grafikonon
+- **Kedvencek** - Mentsd el a kedvenc termékeket
+- **Sötét/Világos Téma** - Válassz a sötét és világos téma között
+- **Platform Agnosztikus** - Működik mobil és webes eszközökön
 
-## Get a fresh project
+## 📁 Projekt Szerkezete
 
-When you're ready, run:
+```
+src/
+├── app/                  # Expo Router oldal komponensek
+│   ├── _layout.tsx      # Fő layout komponens
+│   ├── index.tsx        # Kezdőoldal - nyomon követett termékek listája
+│   └── explore.tsx      # Felfedezés oldal - új termékek hozzáadása
+├── components/          # Újrahasználható UI komponensek
+│   ├── app-tabs.tsx     # Tabulátor navigáció
+│   ├── themed-*.tsx     # Témás komponensek
+│   └── ui/              # UI komponenseink
+├── hooks/               # Custom React hookok
+│   ├── use-theme.ts     # Téma kezelés
+│   └── use-color-scheme.ts  # Szín séma logika
+├── constants/           # Alkalmazás konstansok
+│   └── theme.ts         # Téma beállítások
+└── global.css          # Globális stílusok
+
+assets/
+├── expo.icon/          # Expo ikon konfigurációk
+└── images/             # Alkalmazás képek és ikonok
+```
+
+## 🛠️ Elérhető Parancsok
+
+| Parancs                 | Leírás                         |
+| ----------------------- | ------------------------------ |
+| `npm start`             | Fejlesztési szerver indítása   |
+| `npm run ios`           | iOS szimulátor indítása        |
+| `npm run android`       | Android emulátor indítása      |
+| `npm run web`           | Web verzió indítása            |
+| `npm run lint`          | Kód linting futtatása          |
+| `npm run reset-project` | Projekt alaphelyzetbe állítása |
+
+## 🎨 Megjelenés és Stílus
+
+Az alkalmazás támogatja a:
+
+- **Sötét és világos témákat** - automatikus rendszer preferencia alapján
+- **Reszponzív dizájnt** - mobil és asztali eszközökhöz optimalizálva
+- **Árváltozás megjelenítés** - vizuális jelzések az ár csökkenéséhez/emelkedéséhez
+- **Grafikonok** - árhistória vizualizálása
+
+## 📱 Platform Támogatás
+
+- **iOS**: Expo szimulátorral vagy fizikai eszközön
+- **Android**: Android emulátor vagy fizikai eszköz
+- **Web**: Webböngészőben való futtatás
+
+## 🔧 Fejlesztés
+
+### TypeScript
+
+A projekt teljes TypeScript támogatással rendelkezik. Az összes komponens és hook típusosított.
+
+### Expo Router
+
+Az alkalmazás file-based routingot használ. Az `src/app/` könyvtár az oldal szerkezetét határozza meg.
+
+### Téma Rendszer
+
+A `use-theme` és `use-color-scheme` hooksok segítségével könnyedén kezelhető a téma az alkalmazásban.
+
+### Ár Monitorozás Logika
+
+Az alkalmazás az alábbi funkciókkal rendelkezik:
+
+- Termékek nyomon követése
+- Ár összehasonlítás és előzmények
+- Értesítések az ár változásáról
+- Adattárolás és szinkronizálás
+
+## 📦 Főbb Dependenciák
+
+- **expo-router**: File-based routing
+- **@react-navigation**: Navigációs logika
+- **expo-font**: Egyedi betűtípusok
+- **expo-image**: Optimalizált képkezelés
+- **expo-glass-effect**: Üveg effektusok (iOS)
+
+## 🐛 Hibaelhárítás
+
+### Projekt alaphelyzetbe állítása
+
+Ha problémákat tapasztal, próbálja meg a projektet alaphelyzetbe állítani:
 
 ```bash
 npm run reset-project
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Cache törlése
 
-### Other setup steps
+```bash
+npm start -- --clear
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## 📝 Licenc
 
-## Learn more
+[Licenc információ hozzáadása szükséges]
 
-To learn more about developing your project with Expo, look at the following resources:
+## 👥 Fejlesztés
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Az alkalmazás aktívan fejlesztés alatt áll. Ez egy Price Monitoring megoldás, amely segít a felhasználóknak követni az árváltozásokat és értesítéseket kapni a kedvezményes árakról.
 
-## Join the community
+### 🎯 Jövőbeli Funkciók
 
-Join our community of developers creating universal apps.
+- [ ] Push értesítések implementálása
+- [ ] Árkomparátor különböző kereskedők között
+- [ ] Előrejelzés és trendanalízis
+- [ ] Bejelentkezés és felhasználói fiókok
+- [ ] Adatbázis integráció az árhistóriához
+- [ ] Export funkcionalitás (CSV, PDF)
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Javaslatokért és hibákért nyújtsunk be pull requesteket!
