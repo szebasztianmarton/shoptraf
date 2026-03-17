@@ -143,10 +143,6 @@ npm run reset-project
 npm start -- --clear
 ```
 
-## 📝 Licenc
-
-[Licenc információ hozzáadása szükséges]
-
 ## 👥 Fejlesztés
 
 Az alkalmazás aktívan fejlesztés alatt áll. Ez egy Price Monitoring megoldás, amely segít a felhasználóknak követni az árváltozásokat és értesítéseket kapni a kedvezményes árakról.
