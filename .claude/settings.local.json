@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.aldi.hu)",
+      "WebFetch(domain:www.lidl.hu)",
+      "Bash(cp src/app/index.tsx \"src/app/\\(tabs\\)/index.tsx\")",
+      "Bash(cp src/app/explore.tsx \"src/app/\\(tabs\\)/explore.tsx\")",
+      "Bash(rm src/app/index.tsx src/app/explore.tsx)"
+    ]
+  }
+}

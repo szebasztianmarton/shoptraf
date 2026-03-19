@@ -12,6 +12,7 @@ import {
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useAuth } from "@/contexts/auth-context";
 import { useTheme } from "@/hooks/use-theme";
 
 interface Product {
@@ -32,6 +33,7 @@ export default function HomeScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const colors = useTheme();
+  const { signOut } = useAuth();
 
   // Dummy adatok a kezdéshez
   useEffect(() => {
@@ -197,21 +199,33 @@ export default function HomeScreen() {
             {products.length} termék követése
           </ThemedText>
         </View>
-        <TouchableOpacity
-          onPress={handleRefresh}
-          disabled={loading}
-          style={styles.refreshButton}
-        >
-          {loading ? (
-            <ActivityIndicator color={colors.text} />
-          ) : (
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            onPress={handleRefresh}
+            disabled={loading}
+            style={styles.refreshButton}
+          >
+            {loading ? (
+              <ActivityIndicator color={colors.text} />
+            ) : (
+              <MaterialCommunityIcons
+                name="refresh"
+                size={24}
+                color={colors.text}
+              />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={signOut}
+            style={styles.refreshButton}
+          >
             <MaterialCommunityIcons
-              name="refresh"
+              name="logout"
               size={24}
               color={colors.text}
             />
-          )}
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Content */}
@@ -272,6 +286,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.6,
     marginTop: 4,
+  },
+  headerActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   refreshButton: {
     padding: 8,
