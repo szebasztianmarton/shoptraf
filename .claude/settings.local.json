@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.aldi.hu)",
+      "WebFetch(domain:www.lidl.hu)",
+      "Bash(npx expo:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}
