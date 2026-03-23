@@ -5,7 +5,13 @@
       "WebFetch(domain:www.lidl.hu)",
       "Bash(cp src/app/index.tsx \"src/app/\\(tabs\\)/index.tsx\")",
       "Bash(cp src/app/explore.tsx \"src/app/\\(tabs\\)/explore.tsx\")",
-      "Bash(rm src/app/index.tsx src/app/explore.tsx)"
+      "Bash(rm src/app/index.tsx src/app/explore.tsx)",
+      "Bash(npm install:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(node -e \"console.log\\(require.resolve\\(''expo/bin/cli''\\)\\)\")",
+      "Bash(node -e \"console.log\\(require.resolve\\(''@expo/cli''\\)\\)\")",
+      "Bash(npx expo:*)",
+      "Bash(node scripts/seed-test-user.mjs)"
     ]
   }
 }

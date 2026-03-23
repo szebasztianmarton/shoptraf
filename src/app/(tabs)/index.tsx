@@ -10,80 +10,44 @@ import {
   View,
 } from "react-native";
 
+import { Navbar } from "@/components/navbar";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useAuth } from "@/contexts/auth-context";
 import { useTheme } from "@/hooks/use-theme";
-
-interface Product {
-  id: string;
-  name: string;
-  currentPrice: number;
-  previousPrice: number;
-  minPrice: number;
-  store: string;
-  image?: string;
-  lastUpdated: string;
-  priceChange: number;
-  priceChangePercent: number;
-}
+import { fetchUserProducts, removeProduct } from "@/lib/products";
+import { Product } from "@/types/product";
 
 export default function HomeScreen() {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const colors = useTheme();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
 
-  // Dummy adatok a kezdéshez
+  const loadProducts = async () => {
+    if (!user) return;
+    try {
+      setLoading(true);
+      const data = await fetchUserProducts(user.id);
+      setProducts(data);
+    } catch (e: any) {
+      Alert.alert("Hiba", e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    setProducts([
-      {
-        id: "1",
-        name: "iPhone 15 Pro Max",
-        currentPrice: 349999,
-        previousPrice: 379999,
-        minPrice: 329999,
-        store: "ElectroShop",
-        lastUpdated: "2 órája",
-        priceChange: -30000,
-        priceChangePercent: -7.9,
-      },
-      {
-        id: "2",
-        name: "Samsung Galaxy S24",
-        currentPrice: 299999,
-        previousPrice: 299999,
-        minPrice: 279999,
-        store: "TechMart",
-        lastUpdated: "5 órája",
-        priceChange: 0,
-        priceChangePercent: 0,
-      },
-      {
-        id: "3",
-        name: 'MacBook Pro 14"',
-        currentPrice: 899999,
-        previousPrice: 919999,
-        minPrice: 879999,
-        store: "AppleStore",
-        lastUpdated: "1 órája",
-        priceChange: -20000,
-        priceChangePercent: -2.2,
-      },
-    ]);
-  }, []);
+    loadProducts();
+  }, [user]);
 
   const handleAddProduct = () => {
     router.push("/explore");
   };
 
   const handleRefresh = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      Alert.alert("Siker", "Árak frissítve!");
-    }, 1500);
+    loadProducts();
   };
 
   const handleRemoveProduct = (id: string) => {
@@ -91,8 +55,13 @@ export default function HomeScreen() {
       { text: "Mégse", style: "cancel" },
       {
         text: "Törlés",
-        onPress: () => {
-          setProducts(products.filter((p) => p.id !== id));
+        onPress: async () => {
+          try {
+            await removeProduct(id);
+            setProducts(products.filter((p) => p.id !== id));
+          } catch (e: any) {
+            Alert.alert("Hiba", e.message);
+          }
         },
         style: "destructive",
       },
@@ -191,42 +160,39 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View>
-          <ThemedText style={styles.headerTitle}>ShopTraf</ThemedText>
-          <ThemedText style={styles.headerSubtitle}>
-            {products.length} termék követése
-          </ThemedText>
-        </View>
-        <View style={styles.headerActions}>
-          <TouchableOpacity
-            onPress={handleRefresh}
-            disabled={loading}
-            style={styles.refreshButton}
-          >
-            {loading ? (
-              <ActivityIndicator color={colors.text} />
-            ) : (
+      <Navbar
+        title="ShopTraf"
+        subtitle={`${products.length} termék követése`}
+        rightContent={
+          <>
+            <TouchableOpacity
+              onPress={handleRefresh}
+              disabled={loading}
+              style={styles.iconButton}
+            >
+              {loading ? (
+                <ActivityIndicator color={colors.text} />
+              ) : (
+                <MaterialCommunityIcons
+                  name="refresh"
+                  size={24}
+                  color={colors.text}
+                />
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={signOut}
+              style={styles.iconButton}
+            >
               <MaterialCommunityIcons
-                name="refresh"
+                name="logout"
                 size={24}
                 color={colors.text}
               />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={signOut}
-            style={styles.refreshButton}
-          >
-            <MaterialCommunityIcons
-              name="logout"
-              size={24}
-              color={colors.text}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+            </TouchableOpacity>
+          </>
+        }
+      />
 
       {/* Content */}
       {products.length === 0 ? (
@@ -269,34 +235,13 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 20,
-    paddingTop: 16,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: "700",
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    opacity: 0.6,
-    marginTop: 4,
-  },
-  headerActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  refreshButton: {
+  iconButton: {
     padding: 8,
     borderRadius: 8,
   },
   listContent: {
+    paddingHorizontal: 16,
     paddingBottom: 100,
   },
   productCard: {
@@ -386,7 +331,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 32,
+    paddingHorizontal: 48,
   },
   emptyTitle: {
     fontSize: 18,

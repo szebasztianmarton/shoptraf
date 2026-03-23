@@ -1,7 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
+import { supabase } from '@/lib/supabase';
+
 interface User {
+  id: string;
   email: string;
 }
 
@@ -15,42 +17,50 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const AUTH_KEY = 'auth_user';
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    AsyncStorage.getItem(AUTH_KEY).then((value) => {
-      if (value) {
-        setUser(JSON.parse(value));
-      }
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(
+        session ? { id: session.user.id, email: session.user.email! } : null,
+      );
       setIsLoading(false);
     });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(
+        session ? { id: session.user.id, email: session.user.email! } : null,
+      );
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
     if (!email || !password) {
       throw new Error('Kérjük, töltsd ki az összes mezőt!');
     }
-    const userData: User = { email };
-    await AsyncStorage.setItem(AUTH_KEY, JSON.stringify(userData));
-    setUser(userData);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw new Error(error.message);
   };
 
   const signUp = async (email: string, password: string) => {
     if (!email || !password) {
       throw new Error('Kérjük, töltsd ki az összes mezőt!');
     }
-    const userData: User = { email };
-    await AsyncStorage.setItem(AUTH_KEY, JSON.stringify(userData));
-    setUser(userData);
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) throw new Error(error.message);
   };
 
   const signOut = async () => {
-    await AsyncStorage.removeItem(AUTH_KEY);
-    setUser(null);
+    const { error } = await supabase.auth.signOut();
+    if (error) throw new Error(error.message);
   };
 
   return (
