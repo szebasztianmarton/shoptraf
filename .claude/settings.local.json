@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.aldi.hu)",
+      "WebFetch(domain:www.lidl.hu)"
+    ]
+  }
+}
